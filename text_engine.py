@@ -37,3 +37,28 @@ def build_markov_chain(corpus):
         transition_matrix[word] = sorted(freq.items(), key=lambda x: -x[1])
 
     return transition_matrix, prefix_dict
+
+def predict_next_word(transition_matrix, prefix_dict, sentence_fragment, top_n=5):
+    sentence_fragment = sentence_fragment.lower()
+    words = sentence_fragment.split()
+    if not words:
+        return []
+
+    # Nëse ka një hapësirë të fundit, sugjero nga matrica e tranzicionit
+    if sentence_fragment.endswith(" "):
+        last_word = words[-1]
+        if last_word in transition_matrix:
+            return [word for word, _ in transition_matrix[last_word][:top_n]
+                    if not profanity.contains_profanity(word)]
+    else:
+        # Nëse nuk ka hapësirë, sugjero nga Trie
+        last_word = words[-1]
+        if last_word in prefix_dict:
+            return [word for word in sorted(prefix_dict[last_word])[:top_n]
+                    if not profanity.contains_profanity(word)]
+
+    return []
+
+def build_gui(transition_matrix, prefix_dict):
+    suggestions = []
+    selected_index = 0
