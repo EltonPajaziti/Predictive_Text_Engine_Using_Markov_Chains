@@ -13,7 +13,7 @@ def preprocess_text():
             for sentence in brown.sents() if len(sentence) > 1]
 
 def build_markov_chain(corpus):
-    transition_matrix = defaultdict(list)  # Mbaj tranzicionet në një listë të renditur
+    transition_matrix = defaultdict(list)  # Mbaj tranzicionet në një listë
     prefix_dict = defaultdict(set)
 
     for sentence in corpus:
@@ -21,7 +21,7 @@ def build_markov_chain(corpus):
             current_word = sentence[i]
             next_word = sentence[i + 1]
 
-            # Shto tranzicionet e normalizuara
+            # Shto tranzicionet
             transition_matrix[current_word].append(next_word)
 
             # Ndërto Trie për prefikset
@@ -29,12 +29,21 @@ def build_markov_chain(corpus):
                 prefix = next_word[:j]
                 prefix_dict[prefix].add(next_word)
 
-    # Normalizimi i tranzicioneve dhe renditja
+    # Normalizimi i tranzicioneve dhe llogaritja e probabiliteteve
     for word, transitions in transition_matrix.items():
         freq = defaultdict(int)
+        total_count = 0  # Numri total i tranzicioneve për këtë fjalë
+
+        # Numëro frekuencat e fjalëve që ndjekin
         for next_word in transitions:
             freq[next_word] += 1
-        transition_matrix[word] = sorted(freq.items(), key=lambda x: -x[1])
+            total_count += 1  # Rrit numrin total të shfaqjeve
+
+        # Normalizimi për probabilitete
+        transition_matrix[word] = sorted(
+            [(next_word, count / total_count) for next_word, count in freq.items()],
+            key=lambda x: -x[1]
+        )
 
     return transition_matrix, prefix_dict
 
@@ -120,7 +129,7 @@ def build_gui(transition_matrix, prefix_dict):
     root.mainloop()
 
 
-if name == "main":
+if __name__ == "__main__":
     print("Processing data... Please wait.")
     corpus = preprocess_text()
     transition_matrix, prefix_dict = build_markov_chain(corpus)
