@@ -62,7 +62,8 @@ The Predictive Text Engine addresses the challenge of predicting the next word(s
   ```bash
   pip install nltk better-profanity
 
-  ### Steps to Run the Application:
+  
+Steps to Run the Application:
 
 1. **Ensure the `nltk` Brown Corpus is downloaded**  
    - This will be handled automatically by the script.
@@ -70,7 +71,7 @@ The Predictive Text Engine addresses the challenge of predicting the next word(s
 2. **Run the script**  
    Use the following command:
    ```bash
-   python predictive_text_engine.py
+   python text_engine.py
 3. **Use the GUI**
    - Enter a sentence fragment.
    - View suggestions dynamically below the input box.
